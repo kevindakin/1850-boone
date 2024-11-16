@@ -4,6 +4,7 @@ function heroV2() {
     const nav = document.querySelector(".nav_component");
     const heading = document.querySelector('[load-el="split"]');
     const fadeEls = document.querySelectorAll('[load-el="fade-in"]');
+    const ratingsCard = document.querySelector(".rating-card_wrap");
   
     let splitText = [];
     if (heading) {
@@ -65,8 +66,14 @@ function heroV2() {
           opacity: 1,
           stagger: 0.3,
         },
-        "<1"
-      );
+        "<0.5"
+      )
+      
+      if (ratingsCard) {
+        loadAnim.to(ratingsCard, {
+          opacity: 1,
+        },"<")
+      };
   
     loadAnim.set(loaderBlock, { display: "none" });
   }
