@@ -66,14 +66,8 @@ function heroV2() {
           opacity: 1,
           stagger: 0.3,
         },
-        "<0.5"
-      )
-      
-      if (ratingsCard) {
-        loadAnim.to(ratingsCard, {
-          opacity: 1,
-        },"<")
-      };
+        "<1"
+      );
   
     loadAnim.set(loaderBlock, { display: "none" });
   }
