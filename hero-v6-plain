@@ -1,8 +1,8 @@
-function heroV6() {
+function heroV6Plain() {
   const loaderBlock = document.querySelector('[load-el="loader-block"]');
   const backgroundImage = document.querySelector('[load-el="image"]');
   const nav = document.querySelector(".nav_component");
-  const heading = document.querySelector('[load-el="split"] > h2');
+  const heading = document.querySelector('[load-el="split"]');
   const fadeEls = document.querySelectorAll('[load-el="fade-in"]');
 
   let splitText = [];
@@ -72,5 +72,5 @@ function heroV6() {
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  heroV6();
+  heroV6Plain();
 });
