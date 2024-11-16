@@ -29,7 +29,4 @@ function appendModal() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    appendModal();
-  });
-  
+appendModal();  

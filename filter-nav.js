@@ -15,7 +15,4 @@ function filterNav() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    filterNav();
-  });
-  
+filterNav();  

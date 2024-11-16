@@ -7,7 +7,4 @@ function appendNewsletterCTA() {
     }
   }
   
-  // Wrap the function in a delay to account for any filtering effects
-  document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(appendNewsletterCTA, 100); // Adjust the delay as needed
-  });  
+setTimeout(appendNewsletterCTA, 100);
