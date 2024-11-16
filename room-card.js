@@ -15,7 +15,4 @@ function roomCardHover() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    roomCardHover();
-  });
-  
+roomCardHover();  

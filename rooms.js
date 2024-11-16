@@ -41,8 +41,5 @@ function suiteImageSlider() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    suiteImageSlider();
-    suiteHover();
-  });
-  
+suiteImageSlider();
+suiteHover();

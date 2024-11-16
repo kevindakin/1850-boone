@@ -34,9 +34,7 @@ function suiteCarousel() {
     }
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    suiteCarousel();
-    arrowPosition();
-    window.addEventListener("resize", arrowPosition);
-  });
+suiteCarousel();
+arrowPosition();
+window.addEventListener("resize", arrowPosition);
   

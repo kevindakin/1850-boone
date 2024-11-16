@@ -26,7 +26,4 @@ function starRating() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    starRating();
-  });
-  
+starRating();  

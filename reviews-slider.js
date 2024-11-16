@@ -16,7 +16,5 @@ function reviewsSlider() {
     });
   }
   
-  document.addEventListener("DOMContentLoaded", (event) => {
-    reviewsSlider();
-  });
+  reviewsSlider();
   
