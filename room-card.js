@@ -1,18 +1,39 @@
 function roomCardHover() {
-    const cards = document.querySelectorAll(".room-card_component");
-  
-    cards.forEach((card) => {
-      const link = card.querySelector(".g_clickable");
-      const line = card.querySelector(".btn_secondary-line");
-  
-      link.addEventListener("mouseenter", () => {
-        line.style.width = "100%";
-      });
-  
-      link.addEventListener("mouseleave", () => {
-        line.style.width = "0%";
-      });
+  const cards = document.querySelectorAll(".room-card_component");
+
+  cards.forEach((card) => {
+    const link = card.querySelector(".g_clickable");
+    const img = card.querySelector(".u-cover-absolute");
+    const btn = card.querySelector(".btn_primary");
+
+    const hoverAnim = gsap.timeline({
+      defaults: {
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      paused: true,
     });
-  }
-  
-roomCardHover();  
+
+    hoverAnim.to(img, {
+      scale: 1.02,
+    });
+
+    link.addEventListener("mouseenter", () => {
+      btn.style.borderColor = "var(--button--border-hover)";
+      btn.style.backgroundColor = "var(--button--background-hover)";
+      btn.style.color = "var(--button--text-hover)";
+      hoverAnim.play();
+    });
+
+    link.addEventListener("mouseleave", () => {
+      btn.style.borderColor = "var(--button--border)";
+      btn.style.backgroundColor = "var(--button--background)";
+      btn.style.color = "var(--button--text)";
+      hoverAnim.reverse();
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", (event) => {
+  roomCardHover();
+});

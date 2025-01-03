@@ -1,18 +1,7 @@
 function heroV6() {
   const loaderBlock = document.querySelector('[load-el="loader-block"]');
   const backgroundImage = document.querySelector('[load-el="image"]');
-  const nav = document.querySelector(".nav_component");
-  const heading = document.querySelector('[load-el="split"] > h2');
-  const fadeEls = document.querySelectorAll('[load-el="fade-in"]');
-
-  let splitText = [];
-  if (heading) {
-    const headlineSplit = new SplitType(heading, {
-      types: "lines, words",
-      tagName: "span",
-    });
-    splitText = heading.querySelectorAll(".word");
-  }
+  const text = document.querySelectorAll('[load-el="text"]');
 
   const loadAnim = gsap.timeline({
     defaults: {
@@ -34,7 +23,7 @@ function heroV6() {
     .from(
       backgroundImage,
       {
-        scale: 1.4,
+        scale: 1.1,
         ease: easeInOut,
         duration: 3,
       },
@@ -42,30 +31,11 @@ function heroV6() {
     )
 
     .from(
-      nav,
+      text,
       {
-        y: "-3rem",
         opacity: 0,
       },
-      "<0.5"
-    )
-
-    .from(
-      splitText,
-      {
-        y: "110%",
-        stagger: 0.07,
-      },
-      "<0.5"
-    )
-
-    .to(
-      fadeEls,
-      {
-        opacity: 1,
-        stagger: 0.3,
-      },
-      "<0.5"
+      "<0.4"
     );
 
   loadAnim.set(loaderBlock, { display: "none" });
