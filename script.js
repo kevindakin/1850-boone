@@ -7,6 +7,7 @@ const durationBase = 0.8;
 const durationFast = 0.6;
 const easeInOut = "power4.inOut";
 const easeOut = "power4.out";
+const mobileQuery = "(max-width: 767px)";
 
 // Function to set a cookie with an expiration in hours
 function setCookie(name, value, hours) {
@@ -89,58 +90,59 @@ if (announcementCloseButton) {
 
 function checkNewsletterModal() {
   const modal = document.querySelector(".newsletter-popup_wrapper");
+  if (!modal) return;
+
   const closeButton = modal.querySelector(".newsletter_close");
   const overlay = modal.querySelector(".newsletter-popup_overlay");
+  const COOKIE_NAME = "newsletterClosed";
 
-  if (!modal || !closeButton) return;
+  // Anyone who signs up (in the modal or any form tagged
+  // js-el="newsletter-form") shouldn't be asked again
+  const subscribeForms = document.querySelectorAll(
+    '.newsletter-popup_wrapper form, [js-el="newsletter-form"]'
+  );
+  subscribeForms.forEach((form) => {
+    form.addEventListener("submit", () => {
+      setCookie(COOKIE_NAME, "true", 8760); // 1 year
+    });
+  });
 
-  if (getCookie("newsletterClosed")) {
+  if (getCookie(COOKIE_NAME)) {
     modal.style.display = "none";
     return;
   }
 
   const showModalOnScroll = () => {
-    if (window.scrollY >= document.body.scrollHeight / 2) {
-      modal.style.display = "flex";
-      gsap.to(modal, { opacity: 1, duration: 0.3 });
+    if (window.scrollY < document.body.scrollHeight / 2) return;
 
-      if (window.matchMedia("(max-width: 766px)").matches) {
-        disableScrolling();
-      }
+    // Remove the listener FIRST so nothing below can cause a re-trigger
+    window.removeEventListener("scroll", showModalOnScroll);
 
-      window.removeEventListener("scroll", showModalOnScroll);
+    modal.style.display = "flex";
+    gsap.to(modal, { opacity: 1, duration: 0.3 });
+
+    if (window.matchMedia(mobileQuery).matches) {
+      disableScrolling();
     }
   };
 
-  window.addEventListener("scroll", showModalOnScroll);
+  const closeModal = () => {
+    // Persist dismissal FIRST, before any animation or Lenis calls
+    setCookie(COOKIE_NAME, "true", 720); // 30 days
 
-  closeButton.addEventListener("click", () => {
     gsap.to(modal, {
       opacity: 0,
       duration: 0.3,
       onComplete: () => {
         modal.style.display = "none";
-        if (window.matchMedia("(max-width: 767px)").matches) {
-          enableScrolling();
-        }
-        setCookie("newsletterClosed", "true", 720); // 30 days
+        enableScrolling();
       },
     });
-  });
+  };
 
-  overlay.addEventListener("click", () => {
-    gsap.to(modal, {
-      opacity: 0,
-      duration: 0.3,
-      onComplete: () => {
-        modal.style.display = "none";
-        if (window.matchMedia("(max-width: 767px)").matches) {
-          enableScrolling();
-        }
-        setCookie("newsletterClosed", "true", 720); // 30 days
-      },
-    });
-  });
+  window.addEventListener("scroll", showModalOnScroll, { passive: true });
+  if (closeButton) closeButton.addEventListener("click", closeModal);
+  if (overlay) overlay.addEventListener("click", closeModal);
 }
 
 // Nav Open
@@ -150,12 +152,15 @@ let initialTheme;
 
 function navOpen() {
   const hamburger = document.querySelector('[js-el="nav-button"]');
-  const lineTop = hamburger.children[0];
-  const lineMiddle = hamburger.children[1];
-  const lineBottom = hamburger.children[2];
   const menu = document.querySelector('[js-el="nav-menu"]');
   const links = document.querySelectorAll('[js-el="nav-link"]');
   const overlay = document.querySelector('[js-el="nav-overlay"]');
+
+  if (!hamburger || !menu || !overlay || hamburger.children.length < 3) return;
+
+  const lineTop = hamburger.children[0];
+  const lineMiddle = hamburger.children[1];
+  const lineBottom = hamburger.children[2];
 
   let menuAnim = gsap.timeline({
     paused: true,
@@ -230,6 +235,8 @@ function navOpen() {
 
 function navBackground() {
   const nav = document.querySelector(".nav_component");
+  if (!nav) return;
+
   const background = nav.querySelector(".nav_background");
   const navBorder = nav.querySelector(".nav_border");
 
@@ -261,13 +268,18 @@ function navBackground() {
         nav.setAttribute("data-theme", "dark");
       }
     },
-  })
-    .to(background, { opacity: 1 }, "<")
-    .to(navBorder, { backgroundColor: "var(--swatch--transparent)" }, "<");
+  });
+
+  if (background) tl.to(background, { opacity: 1 }, "<");
+  if (navBorder) {
+    tl.to(navBorder, { backgroundColor: "var(--swatch--transparent)" }, "<");
+  }
 }
 
 function updateHamburgerColorBasedOnScroll() {
   const hamburger = document.querySelector('[js-el="nav-button"]');
+  if (!hamburger) return;
+
   const scrollPosition = window.scrollY;
 
   if (!menuOpen) {
@@ -341,13 +353,13 @@ function fadeUp() {
   });
 }
 
-// Fade Up Animation
+// Fade Left Animation
 
 function fadeLeft() {
   const fadeEls = document.querySelectorAll('[scroll-anim="fade-left"]');
 
   fadeEls.forEach((el) => {
-    let fadeUp = gsap.timeline({
+    let fadeLeft = gsap.timeline({
       scrollTrigger: {
         trigger: el,
         start: "top 92%",
@@ -359,7 +371,7 @@ function fadeLeft() {
       },
     });
 
-    fadeUp.from(el, {
+    fadeLeft.from(el, {
       opacity: 0,
       x: "2rem",
     });
@@ -418,19 +430,27 @@ function appendFooterLink() {
   const staticLink = document.querySelector('[js-el="append-item"]');
   const cmsList = document.querySelector('[js-el="append-list"]');
 
+  if (!staticLink || !cmsList) return;
+
   cmsList.appendChild(staticLink);
 }
 
 // Disable scroll toggle
+// typeof check handles Lenis not being defined (or not yet initialized)
+// without throwing and breaking whatever code runs after these calls
 
 function disableScrolling() {
   document.body.classList.add("no-scroll");
-  lenis.stop();
+  if (typeof lenis !== "undefined" && lenis && typeof lenis.stop === "function") {
+    lenis.stop();
+  }
 }
 
 function enableScrolling() {
   document.body.classList.remove("no-scroll");
-  lenis.start();
+  if (typeof lenis !== "undefined" && lenis && typeof lenis.start === "function") {
+    lenis.start();
+  }
 }
 
 function eyebrowSafari() {
